@@ -1,24 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.16" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina3_5" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.12"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Location List View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="LocationListViewController" customModule="weathergift" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="oB6-Yy-6eo">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="436"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" id="gQq-Pe-0Iu">
+                                        <rect key="frame" x="0.0" y="28" width="320" height="43.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="gQq-Pe-0Iu" id="f5G-QG-09u">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="i37-CB-qa9">
+                                <rect key="frame" x="0.0" y="436" width="320" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="7jj-Lf-5Jq"/>
+                                </constraints>
+                                <items>
+                                    <barButtonItem title="Edit" id="Sug-vJ-PYp">
+                                        <connections>
+                                            <action selector="EditButtonPressed:" destination="BYZ-38-t0r" id="nWL-jH-eEh"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="ZC5-Aa-HUZ"/>
+                                    <barButtonItem title="Add location" id="XBY-CO-J4c">
+                                        <connections>
+                                            <action selector="addButtonPressed:" destination="BYZ-38-t0r" id="p6g-o8-dq0"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="i37-CB-qa9" secondAttribute="bottom" id="B6j-qy-6HU"/>
+                            <constraint firstItem="i37-CB-qa9" firstAttribute="top" secondItem="oB6-Yy-6eo" secondAttribute="bottom" symbolic="YES" id="C9X-bk-YCo"/>
+                            <constraint firstItem="oB6-Yy-6eo" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="E29-0h-8Pm"/>
+                            <constraint firstItem="i37-CB-qa9" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="GSe-pa-Kez"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="oB6-Yy-6eo" secondAttribute="trailing" id="LJh-zi-wLm"/>
+                            <constraint firstItem="i37-CB-qa9" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Rcd-c2-J0n"/>
+                            <constraint firstItem="oB6-Yy-6eo" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="YLY-s2-8fW"/>
+                            <constraint firstItem="i37-CB-qa9" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="ixS-iM-R0P"/>
+                            <constraint firstItem="i37-CB-qa9" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="r1i-XA-w94"/>
+                            <constraint firstItem="i37-CB-qa9" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="zUQ-Sn-tDb"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <connections>
+                        <outlet property="addBarButton" destination="XBY-CO-J4c" id="0fB-9e-oiu"/>
+                        <outlet property="editBarButton" destination="i37-CB-qa9" id="kLB-wj-7AX"/>
+                        <outlet property="tableView" destination="oB6-Yy-6eo" id="D3A-as-BNd"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="138.75" y="118.75"/>
         </scene>
     </scenes>
 </document>
