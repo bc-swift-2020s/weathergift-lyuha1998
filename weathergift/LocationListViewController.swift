@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import GooglePlaces
+
 
 class LocationListViewController: UIViewController {
     
@@ -18,47 +20,59 @@ class LocationListViewController: UIViewController {
     @IBOutlet weak var addBarButton: UIBarButtonItem!
     
     var weatherLocations: [WeatherLocation] = []
+    var selectedLocationIndex = 0 
     
     
-
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        var weatherLocation = WeatherLocation(name: "Chestnut Hill,MA", latitude: 0, longitude: 0)
-        weatherLocations.append(weatherLocation)
-        
-        weatherLocation = WeatherLocation(name: "Lilongwe, Malawi", latitude: 0, longitude: 0)
-        weatherLocations.append(weatherLocation)
-        
-        weatherLocation = WeatherLocation(name: "Buenos Aires,Argentina", latitude: 0, longitude: 0)
-        weatherLocations.append(weatherLocation)
+       
         
         tableView.dataSource =  self
         tableView.delegate = self
         
         // Do any additional setup after loading the view.
     }
-
-
     
+    func saveLocations() {
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode (weatherLocations) {
+            UserDefaults.standard.set(encoded, forKey: "weatherLocations")
+        } else {
+            print("Error")
+        }
+        
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        selectedLocationIndex = tableView.indexPathForSelectedRow!.row
+        saveLocations()
+         
+    }
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+        let autocompleteController = GMSAutocompleteViewController()
+        autocompleteController.delegate = self
+        
+       
+        present(autocompleteController, animated: true, completion: nil)
+        
     }
     
     
     @IBAction func EditButtonPressed(_ sender: UIBarButtonItem) {
         if tableView.isEditing {
-                   tableView.setEditing(false, animated: true)
-                   sender.title = "Edit"
-                   addBarButton.isEnabled = true
-               } else {
-                   tableView.setEditing(true, animated: true)
-                   sender.title = "Done"
-                   addBarButton.isEnabled = false
-               }
-           }
-        
+            tableView.setEditing(false, animated: true)
+            sender.title = "Edit"
+            addBarButton.isEnabled = true
+        } else {
+            tableView.setEditing(true, animated: true)
+            sender.title = "Done"
+            addBarButton.isEnabled = false
+        }
     }
     
+}
+
 
 
 extension LocationListViewController: UITableViewDataSource, UITableViewDelegate {
@@ -69,6 +83,7 @@ extension LocationListViewController: UITableViewDataSource, UITableViewDelegate
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         cell.textLabel?.text = weatherLocations[indexPath.row].name
+        cell.detailTextLabel?.text = "Lat:\(weatherLocations[indexPath.row].latitude),Long:\(weatherLocations[indexPath.row].longitude)"
         return cell
         //what is going to be inside of the cell, find out from the struct!!!
     }
@@ -76,19 +91,52 @@ extension LocationListViewController: UITableViewDataSource, UITableViewDelegate
     
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-           if editingStyle == .delete {
-               weatherLocations.remove(at: indexPath.row)
-               tableView.deleteRows(at: [indexPath], with: .fade)
+        if editingStyle == .delete {
+            weatherLocations.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
             
-           }
-       }
-       
-       func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-           let itemToMove = weatherLocations[sourceIndexPath.row]
-           weatherLocations.remove(at: sourceIndexPath.row)
-           weatherLocations.insert(itemToMove, at: destinationIndexPath.row)
-       
-       }
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        let itemToMove = weatherLocations[sourceIndexPath.row]
+        weatherLocations.remove(at: sourceIndexPath.row)
+        weatherLocations.insert(itemToMove, at: destinationIndexPath.row)
+        
+    }
     
 }
 //reusable codes for removing, moving the individual components around the tableview, edit botton to delete and move around!!
+extension LocationListViewController: GMSAutocompleteViewControllerDelegate {
+    
+    // Handle the user's selection.
+    func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
+        print("Place name: \(place.name)")
+        print("Place ID: \(place.placeID)")
+        print("Place attributions: \(place.attributions)")
+        
+        let newlocation = WeatherLocation(name: place.name ?? "Unknown Place", latitude: place.coordinate.latitude, longitude:place.coordinate.longitude )
+        weatherLocations.append(newlocation)
+        tableView.reloadData()
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func viewController(_ viewController: GMSAutocompleteViewController, didFailAutocompleteWithError error: Error) {
+        // TODO: handle the error.
+        print("Error: ", error.localizedDescription)
+    }
+    
+    // User canceled the operation.
+    func wasCancelled(_ viewController: GMSAutocompleteViewController) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    // Turn the network activity indicator on and off again.
+    func didRequestAutocompletePredictions(_ viewController: GMSAutocompleteViewController) {
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+    }
+    
+    func didUpdateAutocompletePredictions(_ viewController: GMSAutocompleteViewController) {
+        UIApplication.shared.isNetworkActivityIndicatorVisible = false
+    }
+}
