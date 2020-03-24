@@ -21,7 +21,7 @@ class HourlyCollectionViewCell: UICollectionViewCell {
     
     var hourlyWeather: HourlyWeather! {
            didSet {
-            hourLabel.text = "11AM"
+            hourLabel.text = "10am"
             iconImageView.image = getIconImage(iconName: hourlyWeather.hourlyIcon)
             hourlyTemperature.text = "\(hourlyWeather.hourlyTemerature)"
             hourlyPrecipProbability.text = "\(hourlyWeather.hourlyPrecipProbability)%"
